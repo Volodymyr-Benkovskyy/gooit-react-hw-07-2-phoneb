@@ -29,8 +29,6 @@ const ContactList = () => {
             <span>
               {name}: {number}
             </span>
-            
-
             <button
               className={s.contactBtnDel  }  
               type="button"

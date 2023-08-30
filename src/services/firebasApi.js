@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-axios.defaults.baseURL =
-  'https://bookcontacts-47551-default-rtdb.firebaseio.com';
+axios.defaults.baseURL = 'https://64efa105219b3e2873c4b865.mockapi.io';
 
 export const addContactApi = contacts => {
-  return axios.post('/BookContacts.json', contacts).then(respons => {
+  return axios.post('/contacts', contacts).then(respons => {
     const { data } = respons;
     return { ...contacts, id: data.name };
   });
@@ -12,16 +11,17 @@ export const addContactApi = contacts => {
 
 export const getContactsApi = () => {
   return axios
-    .get('/BookContacts.json')
+    .get('/contacts')
     .then(({ data }) =>
       Object.entries(data).map(([id, dataForm]) => ({ id, ...dataForm }))
     );
 };
 
 export const removeContactsApi = id => {
-  return axios.delete(`/BookContacts/${id}.json`).then(respons => respons.data);
+  return axios.delete(`/contacts/${id}`).then(respons => respons.data);
 };
 
+//https://bookcontacts-47551-default-rtdb.firebaseio.com
 //Метод << Object.entries >> є частиною JavaScript і використовується для отримання масиву,
 //що містить масиви пар ключ - значення з властивостей об'єкта,
 //який передається у якості аргументу.Кожен підмасив в масиві містить =>

@@ -62,3 +62,6 @@ export const {
 } = contactsSlice.actions;
 
 export default contactsSlice.reducer;
+
+/*  state.isLoading = false;
+  state.contacts = state.contacts.filter(el => el.id !== payload); */
