@@ -4,11 +4,7 @@ import s from './ContactForm.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 import { getStoreContacts } from 'components/redux/selectors';
-//import { addContactApi } from 'services/firebasApi';
-import { addOperationContacts } from 'components/redux/contacts/contactsOperation';
-
-
-
+import { addContactApi } from 'components/redux/contacts/contactsOperation';
 
 
 const ContactForm = () => {
@@ -33,12 +29,15 @@ const ContactForm = () => {
      const newContact = {
       name: name,
       number: number,
-      id: nanoid(),
+       id: nanoid(),
+       
     };  
+    
+    dispatch(addContactApi(newContact))
    
-     dispatch(addOperationContacts(newContact))
    };
-  form.reset();
+   form.reset();
+    
 };
 
     return (

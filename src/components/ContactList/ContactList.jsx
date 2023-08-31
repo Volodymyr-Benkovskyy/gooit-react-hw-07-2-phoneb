@@ -2,44 +2,34 @@
 
 import s from './ContactList.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { getStoreContacts, getStoreFilter } from 'components/redux/selectors';
-import { deleteOperationContacts } from 'components/redux/contacts/contactsOperation';
-
+import {  selectorFilteredContacts } from 'components/redux/selectors';
+import { deleteContactsApi} from 'components/redux/contacts/contactsOperation';
 
 const ContactList = () => {
   const dispatch = useDispatch();
+  const filterContactsByName = useSelector(selectorFilteredContacts);
 
-  const contacts = useSelector(getStoreContacts);
-  const filter = useSelector(getStoreFilter)
-
-  console.log("hello word");
-  const filterContactsByName = () => filter
-    
-      ? contacts.filter( itemsContact =>
-          itemsContact.name.toLowerCase().includes(filter.toLowerCase())
-        )
-      : contacts ;
-  
   return (
    
-      <ul className={s.contactList}>
-      {contacts.length !== 0 &&
-        filterContactsByName().map(({ id, name, number }) => (
+    <ul className={s.contactList}>
+      { 
+        filterContactsByName.map(({ id, name, number }) => (
           <li key={id} className={s.contactItem}>
             <span>
               {name}: {number}
             </span>
             <button
-              className={s.contactBtnDel  }  
+              className={s.contactBtnDel}
               type="button"
-              onClick={() => dispatch(deleteOperationContacts(id))}>
+              onClick={() =>
+                dispatch(deleteContactsApi(id))}> 
               Delete
             </button>
           </li>
         ))}
     </ul>
     
-  )
+  );
 
 };
 

@@ -1,67 +1,72 @@
 import { createSlice } from '@reduxjs/toolkit';
+import {
+  addContactApi,
+  deleteContactsApi,
+  getContactsApi,
+} from './contactsOperation';
 
-const contactsSlice = createSlice({
-  name: 'BookContacts',
+const ContactsSlice = createSlice({
+  name: 'contacts',
   initialState: {
-    contacts: [],
+    items: [],
     isLoading: false,
     error: null,
   },
-  reducers: {
-    addContactActionRequest(state) {
-      state.isLoading = true; // ==> action
-    },
-    addContactActionSuccess(state, { payload }) {
-      state.isLoading = false;
-      state.contacts.push(payload);
-    },
-    addContactActionError(state, { payload }) {
-      state.isLoading = false;
-      state.error = payload;
-    },
 
-    getContactActionRequest(state) {
-      state.isLoading = true;
-    },
-    getContactActionSuccess(state, { payload }) {
-      state.isLoading = false;
-      state.contacts = payload;
-    },
-    getContactActionError(state, payload) {
-      state.isLoading = false;
-      state.error = payload;
-    },
+  extraReducers: builder => {
+    builder
+      .addCase(addContactApi.fulfilled, (state, { payload }) => {
+        state.items.push(payload);
+      })
+      .addCase(getContactsApi.fulfilled, (state, { payload }) => {
+        state.items = payload;
+      })
+      .addCase(deleteContactsApi.fulfilled, (state, { payload }) => {
+        const index = state.items.findIndex(
+          contact => contact.id === payload.id
+        );
+        state.items.splice(index, 1);
+      })
 
-    removeContactActionRequest(state) {
-      state.isLoading = true;
-    },
-
-    removeContactActionSuccess(state, { payload }) {
-      state.isLoading = false;
-      state.contacts = state.contacts.filter(el => el.id !== payload);
-    },
-
-    removeContactActionError(state, { payload }) {
-      state.isLoading = false;
-      state.error = payload;
-    },
+      .addMatcher(
+        action => {
+          if (
+            action.type.startsWith('contacts') &&
+            action.type.endsWith('/pending')
+          )
+            return true;
+        },
+        state => {
+          state.isLoading = true;
+        }
+      )
+      .addMatcher(
+        action => {
+          if (
+            action.type.startsWith('contacts') &&
+            action.type.endsWith('/rejected')
+          )
+            return true;
+        },
+        (state, { payload }) => {
+          state.isLoading = false;
+          state.error = payload;
+        }
+      )
+      .addMatcher(
+        action => {
+          if (
+            action.type.startsWith('contacts') &&
+            action.type.endsWith('/fulfilled')
+          )
+            return true;
+        },
+        state => {
+          state.isLoading = false;
+          state.error = null;
+        }
+      );
   },
 });
 
-export const {
-  removeContactActionRequest,
-  removeContactActionSuccess,
-  removeContactActionError,
-  getContactActionError,
-  getContactActionSuccess,
-  getContactActionRequest,
-  addContactActionRequest,
-  addContactActionSuccess,
-  addContactActionError,
-  removeContact,
-} = contactsSlice.actions;
-
-export default contactsSlice.reducer;
-
-/*  state.isLoading = false;
-  state.contacts = state.contacts.filter(el => el.id !== payload); */
+export default ContactsSlice.reducer;
