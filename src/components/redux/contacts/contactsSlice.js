@@ -22,10 +22,7 @@ const ContactsSlice = createSlice({
         state.items = payload;
       })
       .addCase(deleteContactsApi.fulfilled, (state, { payload }) => {
-        const index = state.items.findIndex(
-          contact => contact.id === payload.id
-        );
-        state.items.splice(index, 1);
+        state.items = state.items.filter(el => el.id !== payload);
       })
 
       .addMatcher(
